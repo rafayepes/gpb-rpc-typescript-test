@@ -1,0 +1,45 @@
+
+enum MessageType {
+
+// body: ServerGetCaptcha
+// response: CLIENT_GET_CAPTCHA
+// notes: Message sent to the server to request a captcha image to show to the user. Clients must send this message upon receiving :ref:`ServerErrorType.SERVER_ERROR_TYPE_CAPTCHA_REQUIRED`
+// notes: [anonymous=true]
+// notes: [allow_when_blocked=true]
+SERVER_GET_CAPTCHA = 340;
+
+// body: ClientGetCaptcha
+// notes: The captcha image and configuration info
+CLIENT_GET_CAPTCHA = 341;
+
+}
+
+enum ObjectType {
+  TYPE_NULL = 0;
+  TYPE_INTEGER = 1;
+  TYPE_STRING = 5;
+  TYPE_SERVER_GET_CAPTCHA = 211;
+  TYPE_CLIENT_GET_CAPTCHA = 212;
+}
+
+
+message MessageBody {
+  optional ServerGetCaptcha server_get_captcha = 211;
+  optional ClientGetCaptcha client_get_captcha = 212;
+  optional MessageType message_type = 9998;
+}
+
+
+
+message ServerGetCaptcha {
+  required string uid = 1; // the error_id returned in the message ServerErrorMessage
+  optional bool force_new = 2; // true when the user requests a new CAPTCHA
+}
+
+message Captcha {
+  required string image_id = 1; // the url of the captcha
+}
+
+message ClientGetCaptcha { // Server's response to a captcha request
+  required Captcha captcha = 1;
+}
